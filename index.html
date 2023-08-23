@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>扫雷</title>
+        <style>
+            /* Css Style */
+            body {
+                text-align: center;
+            }
+
+            table td {
+                width: 70px;
+                height: 70px;
+                /* border: 1px none black; */
+                text-align: center;
+            }
+
+            button {
+                width: 70px;
+                height: 70px;
+                background-color: transparent;
+                border: none;
+            }
+
+            td {
+                background-color: rgb(189, 189, 189);
+                box-shadow: 0 0 10px rgba(222, 222, 222, 0.8);
+            }
+
+            .minesweeper {
+                margin: 0 auto;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>扫雷</h1>
+        <table class="minesweeper" id="minesweeper_table">
+            <!-- Main Game -->
+            <tr onclick="click_row(this)">
+                <td onclick="click_column(this)" contextmenu=""><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+            </tr>
+            <tr onclick="click_row(this)">
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+            </tr>
+            <tr onclick="click_row(this)">
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+            </tr>
+            <tr onclick="click_row(this)">
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+            </tr>
+            <tr onclick="click_row(this)">
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+            </tr>
+            <tr onclick="click_row(this)">
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+            </tr>
+            <tr onclick="click_row(this)">
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+            </tr>
+            <tr onclick="click_row(this)">
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+            </tr>
+            <tr onclick="click_row(this)">
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+                <td onclick="click_column(this)"><button></button></td>
+            </tr>
+        </table>
+        <script>
+            // Variables
+            var landmine_coor = [];
+            var click_row_number = 0;
+            var click_column_number = 0;
+            var minesweeper_table = document.getElementById("minesweeper_table");
+            var changed_value;
+
+            for (let i=0;i<9;i++) {
+                // Get the landmine coords
+                let random_row = Math.floor(Math.random() * 8);
+                random_row = random_row.toString();
+                let random_column = Math.floor(Math.random() * 8);
+                random_column = random_column.toString();
+                let added_value = random_row + "" + random_column;
+                landmine_coor.push(added_value);
+            };
+
+            function click_row(row) {
+                // Get the row
+                click_row_number = row.rowIndex;
+                check_landmine();
+            };
+
+            function click_column(cell) {
+                // Get the cell
+                click_column_number = cell.cellIndex;
+            };
+
+            function check_landmine() {
+                changed_value = minesweeper_table.rows[click_row_number].cells[click_column_number];
+                for (let i = 0;i < landmine_coor.length;i++) {
+                    landmine_coor.split()
+                }
+                if (landmine_coor.includes(click_row_number.toString() + "" + click_column_number.toString())) {
+                    // If the player click on the landmine...
+                    changed_value.style.backgroundColor = "red";
+                    alert("You failed!");
+                } else {
+                    // Check if the cell user clicked is landmine
+                    if (landmine_coor.includes((parseInt(click_row_number) - 1).toString() + click_column_number)) {
+
+                        changed_value.style.fontSize = "50px";
+                        minesweeper_table.rows[click_row_number].cells[click_column_number].innerHTML = 1;
+                        changed_value.style.backgroundColor = "white";
+
+                    } if (landmine_coor.includes((parseInt(click_row_number) - 1).toString() + parseInt(click_column_number -1).toString())) {
+
+                        changed_value.style.fontSize = "50px";
+                        minesweeper_table.rows[click_row_number].cells[click_column_number].innerHTML = 1;
+                        changed_value.style.backgroundColor = "white";
+
+                    } if (landmine_coor.includes((parseInt(click_row_number) - 1).toString() + parseInt(click_column_number +1).toString())) {
+
+                        changed_value.style.fontSize = "50px";
+                        minesweeper_table.rows[click_row_number].cells[click_column_number].innerHTML = 1;
+                        changed_value.style.backgroundColor = "white";
+
+                    } if (landmine_coor.includes((parseInt(click_row_number) + 1).toString() + parseInt(click_column_number -1).toString())) {
+
+                        changed_value.style.fontSize = "50px";
+                        minesweeper_table.rows[click_row_number].cells[click_column_number].innerHTML = 1;
+                        changed_value.style.backgroundColor = "white";
+
+                    } if (landmine_coor.includes((parseInt(click_row_number) + 1).toString() + parseInt(click_column_number +1).toString())) {
+
+                        changed_value.style.fontSize = "50px";
+                        minesweeper_table.rows[click_row_number].cells[click_column_number].innerHTML = 1;
+                        changed_value.style.backgroundColor = "white";
+
+                    } if (landmine_coor.includes((parseInt(click_row_number) + 1).toString() + parseInt(click_column_number).toString())) {
+
+                        changed_value.style.fontSize = "50px";
+                        minesweeper_table.rows[click_row_number].cells[click_column_number].innerHTML = 1;
+                        changed_value.style.backgroundColor = "white";
+
+                    } if (landmine_coor.includes((parseInt(click_row_number)).toString() + parseInt(click_column_number -1).toString())) {
+
+                        changed_value.style.fontSize = "50px";
+                        minesweeper_table.rows[click_row_number].cells[click_column_number].innerHTML = 1;
+                        changed_value.style.backgroundColor = "white";
+
+                    } if (landmine_coor.includes((parseInt(click_row_number)).toString() + parseInt(click_column_number +1).toString())) {
+
+                        changed_value.style.fontSize = "50px";
+                        minesweeper_table.rows[click_row_number].cells[click_column_number].innerHTML = 1;
+                        changed_value.style.backgroundColor = "white";
+                    } else {
+                        // If there is no landmine beside the cell, only change the color into white
+                        changed_value.style.backgroundColor = "white";
+                    };
+                };
+            };
+
+            var cells = document.querySelectorAll("td");
+            cells.forEach(cell => {
+                cell.addEventListener("contextmenu", function(event) {
+                    event.preventDefault(); // Prevent user from getting rigth click information
+                    cell.style.backgroundColor = "green"; // Green represent flag in Minesweeper
+                });
+            });
+
+        
+        </script>
+    </body>
+</html>
