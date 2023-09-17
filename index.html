@@ -20,6 +20,10 @@
                 width: 70px;
                 height: 70px;
                 text-align: center;
+                background-color: rgb(189, 189, 189);
+                font-family: monospace;
+                box-shadow: 3px 3px 0 0 rgb(123, 123, 123);
+                font-weight: bold;
             }
 
             button {
@@ -27,12 +31,7 @@
                 height: 70px;
                 background-color: transparent;
                 border: none;
-                /* ⬇️ */
-                /* box-shadow: 3px 3px 0 0 rgb(123, 123, 123); */ 
-            }
-
-            td {
-                background-color: rgb(189, 189, 189);
+                
             }
 
             .minesweeper {
@@ -71,7 +70,7 @@
     </head>
     <body>
         <h1 id="bigtitle">Minesweeper</h1>
-        <h3 id="left_flag_number">10 more flag(s)</h3>
+        <h3 id="left_flag_number"></h3>
         <h3 id="total_used_time">0</h3>
         <table class="minesweeper" id="minesweeper_table">
             <!-- Main Game -->
@@ -186,45 +185,131 @@
             var click_column_number = 0;
             var minesweeper_table = document.getElementById("minesweeper_table");
             var changed_value;
-            var left_flag = 10;
+            var left_flag = 8;
             var td_cells = document.querySelectorAll("td");
             var tr_cells = document.querySelectorAll("tr");
             var total_time = 0;
             var win_percentage = 1;
             var tr_cell;
             var enable_flag_mode_or_not = false;
+            var first_click = true;
+            var map = [
+                [0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0]
+            ];
+            var expanded = [
+                [0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0]
+            ];
+            var map_size = 9;
+            var landmine_count = 8;
+
+            document.getElementById("left_flag_number").innerHTML = left_flag + " more flag(s)"
 
             setInterval(update_time,1000);
 
             function flag_mode_function() {
                 enable_flag_mode_or_not = document.getElementById("flag_mode").checked;
-            }
+            };
 
             function update_time() {
                 total_time += 1;
                 document.getElementById("total_used_time").innerHTML = total_time;
-            }
-
-            for (let i=0;i<10;i++) {
-                // Get the landmine coords
-                let random_row = Math.floor(Math.random() * 8); // Random numbers
-                let random_column = Math.floor(Math.random() * 8); // Random numbers
-                random_row = random_row.toString();
-                random_column = random_column.toString();
-                let added_value = random_row + "" + random_column;
-                // Prevent same number from appearing
-                if (landmine_coor.includes(added_value)) {
-                    i -= 1
-                    continue;
-                } else {
-                    landmine_coor.push(added_value);
-                };
             };
+
+            function init(click_row_number,click_column_number) {
+                for (let i=0;i<landmine_count;i++) {
+                    // Get the landmine coords
+                    let random_row = Math.floor(Math.random() * landmine_count); // Random row
+                    let random_column = Math.floor(Math.random() * landmine_count); // Random col
+                    random_row = random_row.toString();
+                    random_column = random_column.toString();
+                    let added_value = random_row + random_column;
+                    // Prevent same number from appearing
+                    if (landmine_coor.includes(added_value) || added_value == (click_row_number.toString() + click_column_number.toString())) {
+                        i -= 1;
+                        continue;
+                    } else {
+                        landmine_coor.push(added_value);
+                        map[random_row][random_column] = 9;
+                    }; 
+                }; 
+                
+                for (let r = 0;r < map_size;r++) {
+                    for (let c = 0;c < map_size;c++) {
+                        var landmine_beside = 0;
+                        if (map[r][c] != 9) {
+                            if (r-1 >= 0 && c-1 >= 0 ) {
+                                if (map[r-1][c-1] == 9 ) {
+                                    landmine_beside += 1
+                                };
+                            }
+                            if (r-1 >= 0) {
+                                if (map[r-1][c] == 9 ) {
+                                    landmine_beside += 1
+                                };
+                            }
+                            if (r-1 >= 0 && c+1 <= map_size-1 ) {
+                                if (map[r-1][c+1] == 9 ) {
+                                    landmine_beside += 1
+                                };
+                            }
+                            if (c-1 >= 0 ) {
+                                if (map[r][c-1] == 9 ) {
+                                    landmine_beside += 1
+                                };
+                            }
+                            if (c+1 <= map_size-1 ) {
+                                if (map[r][c+1] == 9 ) {
+                                    landmine_beside += 1
+                                };
+                            }
+                            if (r+1 <= map_size-1 && c-1 >= 0 ) {
+                                if (map[r+1][c-1] == 9 ) {
+                                    landmine_beside += 1
+                                };
+                            }
+                            if (r+1 <= map_size-1) {
+                                if (map[r+1][c] == 9 ) {
+                                    landmine_beside += 1
+                                };
+                            }
+                            if (r+1 <= map_size-1 && c+1 <= map_size-1) {
+                                if (map[r+1][c+1] == 9 ) {
+                                    landmine_beside += 1
+                                };
+                            }
+                            map[r][c] = landmine_beside;
+                        }
+                    }
+                }
+            }
 
             function click_row(row) {
                 // Get the row number
                 click_row_number = row.rowIndex;
-                check_landmine();
+                if (first_click) {
+                    init(click_row_number,click_column_number);
+                }; 
+                check_landmine(click_row_number,click_column_number);
+                if (map[click_row_number][click_column_number] == 0) {
+                    expand_cell(click_row_number,click_column_number);
+                }
+                first_click = false;
             };
 
             function click_column(cell) {
@@ -232,8 +317,102 @@
                 click_column_number = cell.cellIndex;
             };
 
-            function check_landmine() {
-                // Main Function
+            function expand_cell(row,col) {
+                expanded[row][col] = 1;
+                if (!landmine_coor.includes(row.toString() + col.toString()) && check_if_there_are_landmine_beside(row,col)) {
+                    if (row-1 >= 0 && col-1 >= 0) {
+                        if (!landmine_coor.includes((parseInt(row-1)).toString() + parseInt(col -1).toString())) {
+                            check_landmine(row-1,col-1);
+                            if (map[row-1][col-1] == 0 && expanded[row-1][col-1] == 0) {
+                                expand_cell(row-1,col-1);
+                            };
+                        }
+                    } 
+                    if (row-1 >= 0) {
+                        if (!landmine_coor.includes((parseInt(row-1)).toString() + parseInt(col).toString())) {
+                            check_landmine(row-1,col);
+                            if (map[row-1][col] == 0 && expanded[row-1][col] == 0) {
+                                expand_cell(row-1,col);
+                            };
+                        } 
+                    } 
+                    if (row-1 >= 0 && col+1 <= map_size-1) {
+                        if (!landmine_coor.includes((parseInt(row-1)).toString() + parseInt(col + 1).toString())) {
+                            check_landmine(row-1,col+1);
+                            if (map[row-1][col+1] == 0 && expanded[row-1][col+1] == 0) {
+                                expand_cell(row-1,col+1);
+                            };
+                        } 
+                    }
+                    // 旗子还没有考虑
+                    if (col-1 >= 0) {
+                        if (!landmine_coor.includes((parseInt(row)).toString() + parseInt(col - 1).toString())) {
+                            check_landmine(row,col-1);
+                            if (map[row][col-1] == 0 && expanded[row][col-1] == 0) {
+                                expand_cell(row,col-1);
+                            };
+                        }
+                    } 
+                    if (col+1 <= map_size-1) {
+                        if (!landmine_coor.includes((parseInt(row)).toString() + parseInt(col + 1).toString())) {
+                            check_landmine(row,col+1);
+                            if (map[row][col+1] == 0 && expanded[row][col+1] == 0) {
+                               expand_cell(row,col+1);
+                            };
+                        } 
+                    }
+                    if (row+1 <= map_size-1 && col-1 >= 0) {
+                        if (!landmine_coor.includes((parseInt(row+1)).toString() + parseInt(col - 1).toString())) {
+                            check_landmine(row+1,col-1);
+                            if (map[row+1][col-1] == 0 && expanded[row+1][col-1] == 0) {
+                                expand_cell(row+1,col-1);
+                            };
+                        } 
+                    }
+                    if (row+1 <= map_size-1) {
+                        if (!landmine_coor.includes((parseInt(row+1)).toString() + parseInt(col).toString())) {
+                            check_landmine(row+1,col);
+                            if (map[row+1][col] == 0 && expanded[row+1][col] == 0) {
+                                expand_cell(row+1,col);
+                            };
+                        } 
+                    }
+                    if (row+1 <= map_size-1 && col+1 <= map_size-1) {
+                        if (!landmine_coor.includes((parseInt(row+1)).toString() + parseInt(col + 1).toString())) {
+                            check_landmine(row+1,col+1);
+                            if (map[row+1][col+1] == 0 && expanded[row+1][col+1] == 0) {
+                                expand_cell(row+1,col+1);
+                            };
+                        } 
+                    };
+                } 
+            }
+
+            function check_if_there_are_landmine_beside(row,col) {
+                if (landmine_coor.includes(row.toString() + col.toString()) == false) {
+                    if (landmine_coor.includes((parseInt(row) - 1).toString() + parseInt(col -1).toString())) {
+                        return false;
+                    } else if (landmine_coor.includes((parseInt(row) - 1).toString() + parseInt(col).toString())) {
+                        return false;
+                    } else if (landmine_coor.includes((parseInt(row) + 1).toString() + parseInt(col - 1).toString())) {
+                        return false;
+                    } else if (landmine_coor.includes((parseInt(row) + 1).toString() + parseInt(col + 1).toString())) {
+                        return false;
+                    } else if (landmine_coor.includes((parseInt(row) + 1).toString() + parseInt(col).toString())) {
+                        return false;
+                    } else if (landmine_coor.includes((parseInt(row)).toString() + parseInt(col - 1).toString())) {
+                        return false;
+                    } else if (landmine_coor.includes((parseInt(row)).toString() + parseInt(col + 1).toString())) {
+                        return false;
+                    } else {
+                        return true;
+                    };
+                } else {
+                    return false;
+                };
+            };
+
+            function check_landmine(click_row_number,click_column_number) {
                 if (enable_flag_mode_or_not) {
                     var cell = minesweeper_table.rows[click_row_number].cells[click_column_number];
                     var landmine_coor_copy = [...landmine_coor]; // Copy the array to avoid modifying it during iteration
@@ -260,98 +439,44 @@
                         };
                     } else {
                         alert("You Won!");
+                        console.log("You won!");
                     };
                 } else {
                     var landmine_number = 0;
                     changed_value = minesweeper_table.rows[click_row_number].cells[click_column_number];
-                    changed_value.style.border = "solid";
                     if (landmine_coor.includes(click_row_number.toString() + "" + click_column_number.toString())) {
                         // If the player click on the landmine...
                         changed_value.style.backgroundColor = "red";
-                        alert("You failed!");
+                        console.log("You Lose");
+                    } else if (minesweeper_table.rows[click_row_number].cells[click_column_number].style.backgroundColor == "yellow") {
+                        left_flag += 1;
+                        document.getElementById("left_flag_number").innerHTML = left_flag + " more flag(s)"
+                        minesweeper_table.rows[click_row_number].cells[click_column_number].style.backgroundColor = "gray";
+
                     } else {
-                        // Check if the cell user clicked is landmine
-                        if (landmine_coor.includes((parseInt(click_row_number) - 1).toString() + click_column_number)) {
-
-                            landmine_number += 1;
-                            changed_value.style.fontSize = "50px";
-                            minesweeper_table.rows[click_row_number].cells[click_column_number].innerHTML = landmine_number;
-                            changed_value.style.backgroundColor = "gray";
-                            changed_value.style.fontVariantNumeric = "oldstyle-nums";
-
-                        } if (landmine_coor.includes((parseInt(click_row_number) - 1).toString() + parseInt(click_column_number -1).toString())) {
-
-                            landmine_number += 1;
-                            changed_value.style.fontSize = "50px";
-                            minesweeper_table.rows[click_row_number].cells[click_column_number].innerHTML = landmine_number;
-                            changed_value.style.backgroundColor = "white";
-                            changed_value.style.fontVariantNumeric = "oldstyle-nums";
-
-                        } if (landmine_coor.includes((parseInt(click_row_number) - 1).toString() + parseInt(click_column_number +1).toString())) {
-
-                            landmine_number += 1;
-                            changed_value.style.fontSize = "50px";
-                            minesweeper_table.rows[click_row_number].cells[click_column_number].innerHTML = landmine_number;
-                            changed_value.style.backgroundColor = "white";
-                            changed_value.style.fontVariantNumeric = "oldstyle-nums";
-
-                        } if (landmine_coor.includes((parseInt(click_row_number) + 1).toString() + parseInt(click_column_number -1).toString())) {
-
-                            landmine_number += 1;
-                            changed_value.style.fontSize = "50px";
-                            minesweeper_table.rows[click_row_number].cells[click_column_number].innerHTML = landmine_number;
-                            changed_value.style.backgroundColor = "white";
-                            changed_value.style.fontVariantNumeric = "oldstyle-nums";
-
-                        } if (landmine_coor.includes((parseInt(click_row_number) + 1).toString() + parseInt(click_column_number +1).toString())) {
-
-                            landmine_number += 1;
-                            changed_value.style.fontSize = "50px";
-                            minesweeper_table.rows[click_row_number].cells[click_column_number].innerHTML = landmine_number;
-                            changed_value.style.backgroundColor = "white";
-                            changed_value.style.fontVariantNumeric = "oldstyle-nums";
-
-                        } if (landmine_coor.includes((parseInt(click_row_number) + 1).toString() + parseInt(click_column_number).toString())) {
-
-                            landmine_number += 1;
-                            changed_value.style.fontSize = "50px";
-                            minesweeper_table.rows[click_row_number].cells[click_column_number].innerHTML = landmine_number;
-                            changed_value.style.backgroundColor = "white";
-                            changed_value.style.fontVariantNumeric = "oldstyle-nums";
-
-                        } if (landmine_coor.includes((parseInt(click_row_number)).toString() + parseInt(click_column_number -1).toString())) {
-
-                            landmine_number += 1;
-                            changed_value.style.fontSize = "50px";
-                            minesweeper_table.rows[click_row_number].cells[click_column_number].innerHTML = landmine_number;
-                            changed_value.style.backgroundColor = "white";
-                            changed_value.style.fontVariantNumeric = "oldstyle-nums";
-
-                        } if (landmine_coor.includes((parseInt(click_row_number)).toString() + parseInt(click_column_number +1).toString())) {
-
-                            landmine_number += 1;
-                            changed_value.style.fontSize = "50px";
-                            minesweeper_table.rows[click_row_number].cells[click_column_number].innerHTML = landmine_number;
-                            changed_value.style.backgroundColor = "white";
-                            changed_value.style.fontVariantNumeric = "oldstyle-nums";
-                            
+                        if (map[click_row_number][click_column_number] != 0) {
+                            minesweeper_table.rows[click_row_number].cells[click_column_number].innerHTML = map[click_row_number][click_column_number];
+                            minesweeper_table.rows[click_row_number].cells[click_column_number].style.fontSize = "50px";
+                            minesweeper_table.rows[click_row_number].cells[click_column_number].style.backgroundColor = "white";
+                            minesweeper_table.rows[click_row_number].cells[click_column_number].style.border = "solid";
                         } else {
-                            // If there is no landmine beside the cell, only change the color into white
-                            changed_value.style.backgroundColor = "white";
-                            changed_value.style.boxShadow = "none";
-                        };
+                            minesweeper_table.rows[click_row_number].cells[click_column_number].style.backgroundColor = "white";
+                            minesweeper_table.rows[click_row_number].cells[click_column_number].style.border = "solid";
+                        }
+                    };
 
                         // Change the color of the number depend on the value
-                        var number_on_the_cell = minesweeper_table.rows[click_row_number].cells[click_column_number].innerHTML;
-                        if (number_on_the_cell == 1) {
-                            minesweeper_table.rows[click_row_number].cells[click_column_number].style.color = "blue";
-                        } else if (number_on_the_cell == 2) {
-                            minesweeper_table.rows[click_row_number].cells[click_column_number].style.color = "green";
-                        } else if (number_on_the_cell == 3) {
-                            minesweeper_table.rows[click_row_number].cells[click_column_number].style.color = "red";
-                        } else if (number_on_the_cell >= 4) {
-                            minesweeper_table.rows[click_row_number].cells[click_column_number].style.color = "purple";
-                        };
+                    var number_on_the_cell = minesweeper_table.rows[click_row_number].cells[click_column_number].innerHTML;
+                    if (number_on_the_cell == 1) {
+                        minesweeper_table.rows[click_row_number].cells[click_column_number].style.color = "blue";
+                    } else if (number_on_the_cell == 2) {
+                        minesweeper_table.rows[click_row_number].cells[click_column_number].style.color = "green";
+                    } else if (number_on_the_cell == 3) {
+                        minesweeper_table.rows[click_row_number].cells[click_column_number].style.color = "red";
+                    } else if (number_on_the_cell == 4) {
+                        minesweeper_table.rows[click_row_number].cells[click_column_number].style.color = "purple";
+                    } else if (number_on_the_cell >= 5) {
+                        minesweeper_table.rows[click_row_number].cells[click_column_number].style.color = "black";
                     };
                 };
             };
