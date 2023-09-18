@@ -24,6 +24,9 @@
                 font-family: monospace;
                 box-shadow: 3px 3px 0 0 rgb(123, 123, 123);
                 font-weight: bold;
+                background-size: 60px 60px;
+                background-position: center;
+                background-repeat: no-repeat;
             }
 
             button {
@@ -72,6 +75,12 @@
         <h1 id="bigtitle">Minesweeper</h1>
         <h3 id="left_flag_number"></h3>
         <h3 id="total_used_time">0</h3>
+        <audio id="lose_audio">
+            <source src="bomb_explosion.mp3" type="audio/mpeg">
+        </audio>
+        <audio id="click_audio">
+            <source src="Minesweeper_Click.mp3" type="audio/mpeg">
+        </audio>
         <table class="minesweeper" id="minesweeper_table">
             <!-- Main Game -->
             <tr onclick="click_row(this)">
@@ -431,9 +440,9 @@
 
                     if (!allLandminesFlagged || landmine_coor_copy.length !== 0) {
                         if (left_flag > 0 && cell.style.backgroundColor !== "yellow") {
-                        left_flag -= 1;
-                        cell.style.backgroundColor = "yellow"; // Yellow represents flag in Minesweeper
-                        document.getElementById("left_flag_number").innerHTML = left_flag + " more flags";
+                            left_flag -= 1;
+                            cell.style.backgroundColor = "yellow"; // Yellow represents flag in Minesweeper
+                            document.getElementById("left_flag_number").innerHTML = left_flag + " more flag(s)";
                         } else if (left_flag <= 0) {
                             alert("No more flags!");
                         };
@@ -446,14 +455,21 @@
                     changed_value = minesweeper_table.rows[click_row_number].cells[click_column_number];
                     if (landmine_coor.includes(click_row_number.toString() + "" + click_column_number.toString())) {
                         // If the player click on the landmine...
+                        changed_value.style.backgroundImage = "url('Minesweeper_Icon_Bomb.png')";
                         changed_value.style.backgroundColor = "red";
+                        for (let i = 0;i < landmine_coor.length;i++) {
+                            var show_all_landmine = landmine_coor[i].split("");
+                            minesweeper_table.rows[show_all_landmine[0]].cells[show_all_landmine[1]].style.backgroundImage = "url('Minesweeper_Icon_Bomb.png')";
+                        };
+                        document.getElementById("lose_audio").play();
                         console.log("You Lose");
-                    } else if (minesweeper_table.rows[click_row_number].cells[click_column_number].style.backgroundColor == "yellow") {
+                    } else if (minesweeper_table.rows[click_row_number].cells[click_column_number].style.backgroundImage.includes("Minesweeper_Flag_Icon.png")) {
                         left_flag += 1;
                         document.getElementById("left_flag_number").innerHTML = left_flag + " more flag(s)"
-                        minesweeper_table.rows[click_row_number].cells[click_column_number].style.backgroundColor = "gray";
-
+                        minesweeper_table.rows[click_row_number].cells[click_column_number].style.backgroundColor = "rgb(189,189,189)";
+                        minesweeper_table.rows[click_row_number].cells[click_column_number].style.backgroundImage = "none";
                     } else {
+                        document.getElementById("click_audio").play();
                         if (map[click_row_number][click_column_number] != 0) {
                             minesweeper_table.rows[click_row_number].cells[click_column_number].innerHTML = map[click_row_number][click_column_number];
                             minesweeper_table.rows[click_row_number].cells[click_column_number].style.fontSize = "50px";
@@ -486,12 +502,10 @@
                     event.preventDefault(); // Prevent user from getting right-click information
                     var landmine_coor_copy = [...landmine_coor]; // Copy the array to avoid modifying it during iteration
                     var allLandminesFlagged = true;
-
                     for (let x = 0; x < landmine_coor_copy.length; x++) {
                         const split_value = landmine_coor_copy[x].split("");
                         const landmineCell = minesweeper_table.rows[split_value[0]].cells[split_value[1]];
-                        
-                        if (landmineCell.style.backgroundColor === "yellow") {
+                        if (landmineCell.style.backgroundImage == "url('Minesweeper_Flag_Icon.png')") {
                             landmine_coor_copy.splice(x, 1);
                             x--; // Adjust the index to account for the removed element
                         } else {
@@ -499,16 +513,19 @@
                         }
                     }
 
-                    if (!allLandminesFlagged || landmine_coor_copy.length !== 0) {
-                        if (left_flag > 0 && cell.style.backgroundColor !== "yellow") {
-                        left_flag -= 1;
-                        cell.style.backgroundColor = "yellow"; // Yellow represents flag in Minesweeper
-                        document.getElementById("left_flag_number").innerHTML = left_flag + " more flags";
-                        } else if (left_flag <= 0) {
-                            alert("No more flags!");
+                    if (!first_click) {
+                        if (!allLandminesFlagged || landmine_coor_copy.length !== 0) {
+                            if (left_flag > 0 && cell.style.backgroundColor !== "yellow") {
+                            left_flag -= 1;
+                            cell.style.backgroundImage = "url('Minesweeper_Flag_Icon.png')"; 
+                            document.getElementById("left_flag_number").innerHTML = left_flag + " more flags";
+                            // flagged[][cell.cellIndex] = 1;
+                            } else if (left_flag <= 0) {
+                                alert("No more flags!");
+                            };
+                        } else {
+                            alert("You Won!");
                         };
-                    } else {
-                        alert("You Won!");
                     };
                 });
             });
