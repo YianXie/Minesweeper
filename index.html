@@ -12,45 +12,57 @@
                 padding: 0;
             }
 
-            table td {
+            .minesweeper td {
                 width: 70px;
                 height: 70px;
                 text-align: center;
                 background-color: rgb(189, 189, 189);
                 font-family: monospace;
-                box-shadow: 3px 3px 0 0 rgb(123, 123, 123);
+                box-shadow: 2px 2px 0 0 rgb(156, 156, 156),3px 3px 0 0 rgb(123,123,123),-3px -3px 0 0 rgb(254, 254, 254),-2px -2px 0 0 rgb(222,222,222);
                 font-weight: bold;
                 background-size: 60px 60px;
                 background-position: center;
                 background-repeat: no-repeat;
-                max-width: 70px;
-                max-height: 70px;
                 margin: 0 auto;
+                border: 1px solid;
+                font-size: 50px;
             }
 
             .minesweeper {
                 margin: 0 auto;
                 padding: 10px;
+                font-size: xx-small;
+                border-collapse: collapse;
             }
             
             #gameHead {
                 margin: 0 auto;
                 text-align: center;
                 width: 100%;
+                font-family: monospace;
             }
 
             #gameHead td {
                 background-color: transparent;
                 border: none;
                 box-shadow: none;
+                font-size: 23px;
             }
 
-            #remaining_flag_number {
-/*                margin-left: 330px;*/
-            }
+            @media only screen and (max-width: 700px) {
+                #gameHead td {
+                    font-size: medium;
+                }
 
-            .flag_mode_div {
-/*                margin-right: 300px;*/
+                .minesweeper td {
+                    width: 35px;
+                    height: 35px;
+                    font-size: 25px;
+                    background-size: 30px 30px;
+                    background-repeat: no-repeat;
+                    background-position: center;
+                    font-weight: bold;
+                }
             }
         </style>
     </head>
@@ -61,16 +73,17 @@
         <audio id="click_audio">
             <source src="Minesweeper_Click.mp3" type="audio/mpeg">
         </audio>
+        <br>
         <table id="gameHead">
-            <tr id="tr_test">
+            <tr>
                 <td>
-                    <div id="remaining_flag_number" style="text-align: left;font-size:x-large"></div>
+                    <div id="remaining_flag_number" style="text-align: left;"></div>
                 </td>
                 <td>
-                    <h1 id="bigtitle">Minesweeper</h1>
+                    <div id="bigtitle" style="font-weight: bold;">Minesweeper</div>
                 </td>
                 <td>
-                    <div class="flag_mode_div" style="text-align: right;font-size:x-large">
+                    <div class="flag_mode_div" style="text-align: right;">
                         <span id="total_used_time" style="text-align: right;">0</span>
                         <input type="checkbox" value="flag_mode" name="flag_mode" onchange="flag_mode_function()" id="flag_mode">
                         <label for="flag_mode" id="flag_mode_label"> Flag Mode</label>
@@ -78,7 +91,10 @@
                 </td>
             </tr>
         </table>
-        <table class="minesweeper" id="minesweeper_table"></table>
+        <br>
+        <div>
+            <table class="minesweeper" id="minesweeper_table"></table>
+        </div>
         <script>
             // Variables
             var landmine_coor = [];
@@ -407,12 +423,9 @@
                     document.getElementById("click_audio").play();
                     if (map[click_row_number][click_column_number] != 0) {
                         minesweeper_table.rows[click_row_number].cells[click_column_number].innerHTML = map[click_row_number][click_column_number];
-                        minesweeper_table.rows[click_row_number].cells[click_column_number].style.fontSize = "50px";
                         minesweeper_table.rows[click_row_number].cells[click_column_number].style.backgroundColor = "white";
-                        minesweeper_table.rows[click_row_number].cells[click_column_number].style.border = "solid";
                     } else {
                         minesweeper_table.rows[click_row_number].cells[click_column_number].style.backgroundColor = "white";
-                        minesweeper_table.rows[click_row_number].cells[click_column_number].style.border = "solid";
                     }
                 };
 
@@ -455,13 +468,14 @@
     
                     if (won) {
                         win = true; 
-                        console.log("You Won!");
+                        alert("You Won!");
+                        clearInterval(record_time);
                     }
                 } else if (left_flag < 0) {
                     console.log("No More Flag!");
                     return;
                 };
-            }
+            };
 
             td_cells.forEach(cell => {
                 cell.addEventListener("contextmenu", function(event) {
@@ -469,8 +483,6 @@
                     right_click(cell);
                 });
             });
-
-            console.log(document.getElementById("gameHead").style.cilentWidth);
         </script>
     </body>
 </html>
