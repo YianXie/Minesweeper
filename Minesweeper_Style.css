@@ -1,0 +1,61 @@
+/* Css Style */
+body {
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+.minesweeper td {
+    width: 69px;
+    height: 69px;
+    text-align: center;
+    background-color: rgb(189, 189, 189);
+    font-family: monospace;
+    font-weight: bold;
+    background-size: 60px 60px;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: 0 auto;
+    border-top: 3px solid rgb(254,254,254);
+    border-left: 3px solid rgb(254,254,254);
+    border-bottom: 4px solid rgb(104,104,104);
+    border-right: 4px solid rgb(104,104,104);
+    font-size: 50px;
+    border-collapse: collapse;
+}
+
+.minesweeper {
+    margin: 0 auto;
+    border: 3px solid rgb(104,104,104);
+    border-radius: 5px;
+}
+
+#gameHead {
+    margin: 0 auto;
+    text-align: center;
+    width: 100%;
+    font-family: monospace;
+}
+
+#gameHead td {
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    font-size: 23px;
+}
+
+@media only screen and (max-width: 700px) {
+    #gameHead td {
+        font-size: medium;
+    }
+
+    .minesweeper td {
+        width: 35px;
+        height: 35px;
+        font-size: 25px;
+        background-size: 30px 30px;
+        background-repeat: no-repeat;
+        background-position: center;
+        font-weight: bold;
+    }
+}
