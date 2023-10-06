@@ -10,64 +10,42 @@ var win_percentage = 1;
 var tr_cell;
 var enable_flag_mode_or_not = false;
 var first_click = true;
-var map = [
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0]
-];
-var expanded = [
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0]
-];
-var flag_map = [
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0]
-];
 var map_size = 9;
-var landmine_count = 8;
+var landmine_count = 0;
 var mouseDownTime = 0;
 var timeOutId = null;
 var isFlagged = false;
 var tr_cells;
 var td_cells;
+var map = [],flag_map = [],expanded = [];
 
-for (let r = 0;r<map_size;r++) {
-    const createTr = document.createElement("tr");
-    createTr.id = r;
-    minesweeper_table.appendChild(createTr);
-    for (let c = 0;c<map_size;c++) {
-        const createTd = document.createElement("td");
-        document.getElementById(r).appendChild(createTd);
+console.log("1429"); // version 1429
+function generateMap(size) {
+    for (let r = 0;r<size;r++) {
+        const createTr = document.createElement("tr");
+        createTr.id = r;
+        minesweeper_table.appendChild(createTr);
+        // Dynamically generated
+        map.push([]);
+        flag_map.push([]);
+        expanded.push([]);
+        landmine_count++;
+        for (let c = 0;c<size;c++) {
+            const createTd = document.createElement("td");
+            document.getElementById(r).appendChild(createTd);
+            map[r].push(0);
+            flag_map[r].push(0);
+            expanded[r].push(0);
+        };
     };
 };
-
-
+generateMap(map_size); // generate orginal map
 
 td_cells = document.querySelectorAll("td");
 tr_cells = document.querySelectorAll("tr");
 
 // use EventListener instead of "onclick"
-td_cells.forEach(detect_td_onclick => {
+td_cells.forEach(detect_td_onclick => { // check left click
     detect_td_onclick.addEventListener("click",function(event){
         click_column(this);
     });
@@ -81,6 +59,8 @@ tr_cells.forEach(detect_tr_onclick => {
     };
 });
 
+// hold for 1s to place flag
+// 移动端还有问题
 td_cells.forEach(hold_right_click => {
     hold_right_click.addEventListener("mousedown",function(event) {
         mouseDownTime = Date.now();
@@ -101,6 +81,11 @@ td_cells.forEach(hold_right_click => {
 
 function flag_mode_function() {
     enable_flag_mode_or_not = document.getElementById("flag_mode").checked;
+    if (enable_flag_mode_or_not) {
+        minesweeper_table.style.cursor = "url('Website_Icon.ico'),auto";
+    } else {
+        minesweeper_table.style.cursor = "auto";
+    }
 };
 
 document.getElementById("remaining_flag_number").innerHTML = left_flag + " more flags"
@@ -190,6 +175,7 @@ function click_row(row) {
             expand_cell(click_row_number,click_column_number);
         };
         first_click = false;
+        store_data();
     };
 };
 
@@ -320,7 +306,6 @@ function check_landmine(click_row_number,click_column_number) {
         };
         document.getElementById("lose_audio").play();
         clearInterval(record_time);
-        console.log("You Lose");
         return;
     } else {
         document.getElementById("click_audio").play();
@@ -377,7 +362,6 @@ function right_click(cell) {
             clearInterval(record_time);
         }
     } else if (left_flag < 0) {
-        console.log("No More Flag!");
         return;
     };
 };
@@ -388,3 +372,47 @@ td_cells.forEach(cell => {
         right_click(cell);
     });
 });
+
+function changeSize(id) {
+    console.log(id);
+    if (id == "easyMode" && map_size != 9) {
+        map_size = 9;
+        generateMap(map_size);
+    } else if (id == "hardMode" && map_size != 16) {
+        map_size = 16;
+        generateMap(map_size);
+    } else if (id == "expertMode" && map_size != 30) {
+        map_size = 30;
+        generateMap(map_size);
+    };
+};
+
+function store_data() {
+    var data = [
+        document.getElementById("total_used_time").innerHTML,
+        "\r\n",
+        left_flag,
+        "\r\n",
+        map,
+        "\r\n",
+        flag_map,
+        "\r\n",
+        expanded,
+    ];
+    
+    fetch("data_store_fetch.php", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: `action=store&data=${data}`,
+    })
+    .then(response => response.text()) // 将响应转换为文本
+    .then(responseData => {
+        // 将PHP脚本的响应输出到页面上
+//        console.log(responseData);
+    })
+    .catch(error => {
+        console.error("Error:", error);
+    });
+};
