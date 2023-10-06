@@ -2,22 +2,38 @@
 <html lang="en">
     <head>
         <title>扫雷</title>
+        <meta http-equiv="expires" content="0">
+        <meta http-equiv="pragma" content="no-cache">
+        <meta http-equiv="cache-control" content="no-cache">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width,initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="Minesweeper_Style.css">
+        <link rel="icon" type="image/x-icon" href="Website_Icon.ico">
     </head>
     <body>
-        <audio id="lose_audio">
-            <source src="bomb_explosion.mp3" type="audio/mpeg">
-        </audio>
-        <audio id="click_audio">
-            <source src="Minesweeper_Click.mp3" type="audio/mpeg">
-        </audio>
-        <br>
+        <!-- audio file -->
+        <div> 
+            <audio id="lose_audio">
+                <source src="bomb_explosion.mp3" type="audio/mpeg">
+            </audio>
+            <audio id="click_audio">
+                <source src="Minesweeper_Click.mp3" type="audio/mpeg">
+            </audio>
+            <audio id="gameStart" autoplay>
+                <source src="start.mp3" type="audio/mpeg">
+            </audio>
+        </div>
         <table id="gameHead">
             <tr>
                 <td>
                     <div id="remaining_flag_number" style="text-align: left;"></div>
+                    <div style="text-align: left;" id="changeSize">
+                        <button id="easyMode" onclick="changeSize(this.id)">Easy</button>
+                        <br>
+                        <button id="hardMode" onclick="changeSize(this.id)">Hard</button>
+                        <br>
+                        <button id="expertMode" onclick="changeSize(this.id)">Expert</button>
+                    </div>
                 </td>
                 <td>
                     <div id="bigtitle" style="font-weight: bold;">Minesweeper</div>
@@ -27,14 +43,14 @@
                         <span id="total_used_time" style="text-align: right;">0</span>
                         <input type="checkbox" value="flag_mode" name="flag_mode" onchange="flag_mode_function()" id="flag_mode">
                         <label for="flag_mode" id="flag_mode_label"> Flag Mode</label>
+                        <br>
+                        <a href="register.html">Register</a>
                     </div>
                 </td>
             </tr>
         </table>
-        <br>
-        <div>
-            <table class="minesweeper" id="minesweeper_table"></table>
-        </div>
+        
+        <table class="minesweeper" id="minesweeper_table"></table>
         <script src="Minesweeper_Javascript.js"></script>
     </body>
 </html>
