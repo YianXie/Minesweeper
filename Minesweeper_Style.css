@@ -2,6 +2,7 @@
 body {
     text-align: center;
     margin: 0;
+    background-color: aliceblue;
     padding: 0;
 }
 
@@ -42,6 +43,30 @@ body {
     border: none;
     box-shadow: none;
     font-size: 23px;
+}
+
+#changeSize button {
+    width: 170px;
+    height: 30px;
+    margin-top: 10px;
+    border-top: 3px solid rgb(254,254,254);
+    border-left: 3px solid rgb(254,254,254);
+    border-bottom: 4px solid rgb(104,104,104);
+    border-right: 4px solid rgb(104,104,104);
+    background-color: rgb(189,189,189);
+    cursor: pointer;
+    font-size: medium;
+    font-weight: bold;
+}
+
+#changeSize button:hover {
+    background-color: rgb(64, 64, 247);
+}
+
+#changeSize button:active {
+    background-color: lightblue;
+    box-shadow: 0 5px #666;
+    transform: translateY(2px);
 }
 
 @media only screen and (max-width: 700px) {
