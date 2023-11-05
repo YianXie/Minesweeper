@@ -1,9 +1,16 @@
 /* Css Style */
+@import url('https://fonts.cdnfonts.com/css/digital-dismay'); /* Time font */
+
 body {
     text-align: center;
-    margin: 0;
     background-color: aliceblue;
     padding: 0;
+    scroll-behavior: smooth;
+    font-family: monospace;
+}
+
+main {
+    border: 1px solid;
 }
 
 .minesweeper td {
@@ -16,27 +23,44 @@ body {
     background-size: 60px 60px;
     background-position: center;
     background-repeat: no-repeat;
-    margin: 0 auto;
+    margin: 0 10px 0 10px;
     border-top: 3px solid rgb(254,254,254);
     border-left: 3px solid rgb(254,254,254);
     border-bottom: 4px solid rgb(104,104,104);
     border-right: 4px solid rgb(104,104,104);
-    font-size: 50px;
     border-collapse: collapse;
+    transition: height 0.5s, width 0.5s;
 }
 
 .minesweeper {
-    margin: 0 auto;
+    position: relative;
+    left: 50vw;
+    transform: translate(-50%);
     border: 3px solid rgb(104,104,104);
     border-radius: 5px;
+    padding: 0;
 }
 
 #gameHead {
-    margin: 0 auto;
     text-align: center;
     width: 100%;
-    font-family: monospace;
 }
+
+.leftFlag {
+    float: left;
+    margin-left: 30px;
+    margin-top: 30px;
+    width: fit-content;
+    position: relative;
+    right: 6vw;
+    top: 17vh;
+}
+
+.leftFlag img {float: left;}
+
+.gameTitle {width: fit-content;}
+
+.gameTitle img {float: left;}
 
 #gameHead td {
     background-color: transparent;
@@ -45,29 +69,161 @@ body {
     font-size: 23px;
 }
 
-#changeSize button {
-    width: 170px;
-    height: 30px;
-    margin-top: 10px;
+.diffculty {
+    width: 100px;
+    height: 25px;
     border-top: 3px solid rgb(254,254,254);
     border-left: 3px solid rgb(254,254,254);
     border-bottom: 4px solid rgb(104,104,104);
     border-right: 4px solid rgb(104,104,104);
     background-color: rgb(189,189,189);
-    cursor: pointer;
-    font-size: medium;
+    text-align: center;
     font-weight: bold;
+    cursor: pointer;
+    position: relative;
+    top: 30vh;
+    right: 42vw;
 }
 
-#changeSize button:hover {
-    background-color: rgb(64, 64, 247);
+#sizeSelection:hover,#sizeSelection:focus {background-color: #746d6d;}
+
+a:visited {
+    color: blue;
+    text-decoration: underline;
 }
 
-#changeSize button:active {
-    background-color: lightblue;
-    box-shadow: 0 5px #666;
-    transform: translateY(2px);
+#bigtitle {
+    font-size: 35px;
+    float: left;
+    /* margin-left: 50px; */
+    margin-top: 10px;
+    position: sticky;
 }
+
+#register {
+    float: right;
+    margin-right: 10px;
+    margin-top: 30px;
+    font-family: monospace;
+    font-family: 23px;
+}
+
+#total_used_time {
+    font-family: "Digital Dismay", sans-serif;
+    color: red;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.user_content {
+    display: none;
+    position: absolute;
+    background-color: rgb(189, 189, 189);
+    min-width: 80px;
+    overflow: auto;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.user_content a {
+    color: black;
+    padding: 5px 10px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+
+.user_content a:hover {background-color: #ddd;}
+
+.show {display: block;}
+
+#close_win_msg {
+    background-color: rgba(175, 175, 175, 0.8);
+    border-radius: 3px;
+    cursor: pointer;
+    float: right;
+    margin: 4px 6px 2px 0;
+    border-top: 2px solid rgb(254,254,254);
+    border-left: 2px solid rgb(254,254,254);
+    border-bottom: 2px solid rgb(104,104,104);
+    border-right: 2px solid rgb(104,104,104);
+}
+
+.win_msg {
+    width: 300px;
+    border-radius: 20px;
+    top: 0;
+    left: 50%;
+    border: 3px solid black;
+    transform: translate(0,-100%) scale(0.1);
+    transition: transform 0.5s, top 0.5s;
+    visibility: hidden;
+    position: absolute;
+    background-color: rgba(238, 232, 232, 0.8);
+}
+
+.openPopup {
+    z-index: 10;
+    visibility: visible;
+    top: 50%;
+    transform: translate(-50%,-50%) scale(1);
+}
+
+.background_blur {
+    filter: blur(5px);
+}
+
+.winHead span {
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    font-size: large;
+}
+
+.winHead {
+    height: 30px;
+    border-top-right-radius: 16px;
+    border-top-left-radius: 16px;
+    background-color: rgb(109,172,238);
+}
+
+.new_game_btn {
+    width: 250px;
+    height: 30px;
+    background-color: rgba(175, 175, 175, 0.7);
+    border-top: 3px solid rgb(254,254,254);
+    border-left: 3px solid rgb(254,254,254);
+    border-bottom: 4px solid rgb(104,104,104);
+    border-right: 4px solid rgb(104,104,104);
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: medium;
+    font-weight: 600;
+    margin: 10px 0 20px 0;
+}
+
+.new_game_btn:hover {opacity: 0.5;}
+
+.win_msg p {
+    color: rgba(45, 45, 45, 1);
+    font-weight: 500;
+}
+
+.win_stats {
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+}
+
+.win_stats span {
+    color: rgba(24, 24, 24, 1);
+    font-size: 35px;
+    font-weight: bolder;
+}
+
+.remain-flag {font-size: 20px;}
 
 @media only screen and (max-width: 700px) {
     #gameHead td {
